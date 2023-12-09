@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<style>
+	.flex-container {
+		display: flex;
+		flex-wrap: wrap;
+		background-color: transparent;
+		align-items: flex-start;
+		margin: 0px 0px 0px 0px;
+		font-size: 7mm;
+		height: 9mm;
+	}
+	.header
+	{
+		font-size: 10mm;
+		height: 12mm;
+	}
+	button
+	{
+		font-size: 7mm;
+		height: 9mm;
+		min-width: 5%;
+	}
+	input
+	{
+		font-size: 7mm;
+		height: 9mm;
+		width: 5%
+	}
+
+</style>
+
+<head>
+
+	<meta charset="UTF-8">
+	<title>Simple Servo Controller</title>
+	
+	<script src="./xSerial.js" ></script>
+	<script>
+		function xconnect() {
+			if (document.getElementById("xconnect").innerText == "connect")
+			{
+				document.getElementById("xconnect").innerText = "disconnect";
+				connect(xline);
+			}
+			else 
+			{
+				document.getElementById("xconnect").innerText = "connect";
+				disconnectPort();
+			}
+
+		}
+		function xline(xelement)
+		{
+	    console.log(xelement)
+		if (xelement.substring(0,4)=="XSSC")
+						{setdomvalue(xelement)}
+		
+		
+		}
+		function sendmes() {
+			writetostream(document.getElementById("mes").innerText)
+		}
+		function startspeed() {
+			document.getElementById("message").innerText="Speed"
+			xind=parseInt(document.getElementById("xind").value) -1 
+			xmes="XSSC07"+  xind + "   "
+			+document.getElementById("pins").value.padStart(4, '0')
+			+document.getElementById("sw").value.padStart(4, '0')
+			+document.getElementById("swtype").value.padStart(4, '0')
+			+document.getElementById("relais").value.padStart(4, '0')
+			+document.getElementById("pos0").value.padStart(4, '0')
+			+document.getElementById("pos1").value.padStart(4, '0')
+			+document.getElementById("speed").value.padStart(4, '0')
+			writetostream(xmes)
+			
+		}
+		
+		function setreset() {
+			
+			writetostream("XSSC08")
+		}
+		function setrestart() {
+			
+			writetostream("XSSC01")
+		}
+		function gopos0() {
+			document.getElementById("message").innerText="Pos0"
+			xind=parseInt(document.getElementById("xind").value) -1 
+			xmes="XSSC05"+  xind + "   "
+			+document.getElementById("pins").value.padStart(4, '0')
+			+document.getElementById("sw").value.padStart(4, '0')
+			+document.getElementById("swtype").value.padStart(4, '0')
+			+document.getElementById("relais").value.padStart(4, '0')
+			+document.getElementById("pos0").value.padStart(4, '0')
+			+document.getElementById("pos1").value.padStart(4, '0')
+			+document.getElementById("speed").value.padStart(4, '0')
+			writetostream(xmes)
+			
+		}
+		function gopos1() {
+			document.getElementById("message").innerText="Pos1"
+			xind=parseInt(document.getElementById("xind").value) -1 
+			xmes="XSSC06"+  xind + "   "
+			+document.getElementById("pins").value.padStart(4, '0')
+			+document.getElementById("sw").value.padStart(4, '0')
+			+document.getElementById("swtype").value.padStart(4, '0')
+			+document.getElementById("relais").value.padStart(4, '0')
+			+document.getElementById("pos0").value.padStart(4, '0')
+			+document.getElementById("pos1").value.padStart(4, '0')
+			+document.getElementById("speed").value.padStart(4, '0')
+			writetostream(xmes)
+			
+		}
+		function xsel() {
+			
+		}
+		function xchange() {
+			
+		}
+		function read() {
+			document.getElementById("message").innerText="Reading"
+			xind=parseInt(document.getElementById("xind").value) -1 
+			xmes="XSSC03"+ xind + "   "
+			writetostream(xmes)
+		}
+		function serwrite() {
+			document.getElementById("message").innerText="Writing"
+			xind=parseInt(document.getElementById("xind").value) -1 
+			xmes="XSSC02"+ xind + "   "
+			+document.getElementById("pins").value.padStart(4, '0')
+			+document.getElementById("sw").value.padStart(4, '0')
+			+document.getElementById("swtype").value.padStart(4, '0')
+			+document.getElementById("relais").value.padStart(4, '0')
+			+document.getElementById("pos0").value.padStart(4, '0')
+			+document.getElementById("pos1").value.padStart(4, '0')
+			+document.getElementById("speed").value.padStart(4, '0')
+			//+document.getElementById("refresh").value.padStart(4, '0')
+			writetostream(xmes)
+		}
+		function setdomvalue(xele)
+		{
+            
+			xarr0=xele.split("=")
+			xarr=xarr0[1].split(",")
+			console.log(xarr0)
+			if (xarr0[0]=="XSSC.VAL")
+			{
+			document.getElementById("message").innerText=" OK"
+            document.getElementById("xind").value=parseInt(xarr[0])+1
+			document.getElementById("pins").value=xarr[1]
+			document.getElementById("sw").value=xarr[2]
+			document.getElementById("swtype").value=xarr[3]
+			document.getElementById("relais").value=xarr[4]
+			document.getElementById("pos0").value=xarr[5]
+			document.getElementById("pos1").value=xarr[6]
+			document.getElementById("speed").value=xarr[7]
+			//document.getElementById("refresh").value=xarr[8]
+			}
+			if (xarr0[0]=="XSSC.MCV")
+			{
+				document.getElementById("xind").max=xarr[0]
+				console.log(document.getElementById("xind").max)
+			}
+			if (xarr0[0]=="XSSC.READY")
+			{
+			document.getElementById("message").innerText="Ready Connect"
+			
+			xarr0=xele.split("=")
+			xarr=xarr0[1].split(",")
+			version=xarr[0]
+			document.getElementById("version").innerText=version
+			}
+		}
+		
+	</script>
+</head>
+
+<body>
+	
+
+	<div class="header">SiSeCo: Einfache Servo Ansteuerung </div>
+	
+		<div class="flex-container" >
+			<button id="xconnect" onclick="xconnect();">connect</button>
+			<div style="width:20%;text-align: center;">Auswahl serial-Port</div>
+		</div>
+		<div class="flex-container">
+			<div style="width:10%">Version :</div>
+			<div id="version" style="width:10%"></div>
+			<div  style="width:80%"></div>
+		</div>
+			<div class="flex-container">
+			<div style="width:10%">Meldung :</div>
+			<div id="message" style="width:90%"></div>
+		</div>
+		
+	
+	<div class="flex-container" >
+		<div style="width:10%">Slotnummer</div>
+		<input type="number" min="1" max="8" id="xind"  onchange="xchange(event)" value=1>
+		
+		<button onclick="read();">read</button>
+	  	
+	  	<button onclick="serwrite();">write</button>
+	  	
+	</div>
+	
+	<div class="flex-container">
+		<div style="width:10%">Pos 0</div>
+		<input type="number" min="800" max="2500" id="pos0"  onchange="xchange(event)" value=1500>
+		<button onclick="gopos0();">go</button>
+	</div>
+	<div class="flex-container">
+		<div style="width:10%">Pos 1 </div>
+		<input type="number" min="800" max="2500" id="pos1" onchange="xchange(event)" value=1500>
+		<button onclick="gopos1();">go</button>
+	</div>
+	<div class="flex-container">
+		<div style="width:10%">Speed </div>
+		<input type="number" min="2" max="30" id="speed"  onchange="xchange(event)" value=20>
+		<button onclick="startspeed();">start</button>
+		
+	</div>
+
+	<div> &nbsp &nbsp </div>
+	<div class="flex-container">
+		<div style="width:10%">Servo-Pin</div>
+		<input type="number" min="2" max="26" id="pins"  onchange="xchange(event)" value=2>
+	</div>
+	<div class="flex-container">
+		<div style="width:10%">Switch-Pin</div>
+		<input type="number" min="2" max="26" id="sw"  onchange="xchange(event)" value=2>
+	</div>
+	<div class="flex-container">
+		<div style="width:10%">Switch-Type</div>
+		<input type="number" min="0" max="2" id="swtype"  onchange="xchange(event)" value=1>
+	</div>
+	<div class="flex-container">
+		<div style="width:10%">Relais-Pin</div>
+		<input type="number" min="2" max="26" id="relais"  onchange="xchange(event)" value=2>
+	</div>
+	<div> &nbsp &nbsp </div>
+	<div class="flex-container">
+	<button onclick="setreset();">reset</button>
+	<div style="width:20%;text-align: center;">Setzt Baustein auf Default-Werte</div>
+	</div>
+	<div class="flex-container">
+	<button onclick="setrestart();">restart</button>
+	<div style="width:20%;text-align: center;">Neustart Baustein</div>
+    </div>
+	<div> &nbsp &nbsp </div>
+	 
+
+</body>
+
+</html>
